@@ -7,6 +7,12 @@ interface AuthMiddlewareOptions {
   enabled: boolean;
 }
 
+const buildUnauthorizedError = (): HttpError => {
+  return new HttpError(401, "UNAUTHORIZED", "Missing or invalid Bearer token", {
+    hint: "Set Authorization: Bearer <token>",
+  });
+};
+
 export const createAuthMiddleware = ({
   enabled,
 }: AuthMiddlewareOptions) => {
@@ -19,22 +25,14 @@ export const createAuthMiddleware = ({
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith(AUTH_HEADER_PREFIX)) {
-      next(
-        new HttpError(401, "UNAUTHORIZED", "Missing or invalid Bearer token", {
-          hint: "Set Authorization: Bearer <token>",
-        }),
-      );
+      next(buildUnauthorizedError());
       return;
     }
 
     const token = authHeader.slice(AUTH_HEADER_PREFIX.length).trim();
 
     if (token.length === 0) {
-      next(
-        new HttpError(401, "UNAUTHORIZED", "Missing or invalid Bearer token", {
-          hint: "Set Authorization: Bearer <token>",
-        }),
-      );
+      next(buildUnauthorizedError());
       return;
     }
 
