@@ -378,8 +378,7 @@ const parseCommaSeparatedAddress = (segments: string[]): ParsedAddressParts | nu
   };
 };
 
-const parseAddressParts = (rawAddress: string): ParsedAddressParts | null => {
-  const normalizedInput = normalizeAddressText(rawAddress);
+const parseAddressParts = (normalizedInput: string): ParsedAddressParts | null => {
   const commaSegments = normalizedInput
     .split(",")
     .map((segment) => segment.trim())

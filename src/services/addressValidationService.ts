@@ -3,6 +3,7 @@ import type {
   ValidateAddressResponse,
 } from "../domain/addressContract.js";
 import { classifyAddressResult } from "../domain/addressClassifier.js";
+import type { ProviderValidationResult } from "../providers/addressProvider.js";
 import { LocalHeuristicProvider } from "../providers/localHeuristicProvider.js";
 import type { AddressProvider } from "../providers/addressProvider.js";
 
@@ -13,10 +14,10 @@ export interface AddressValidationService {
 class DefaultAddressValidationService implements AddressValidationService {
   constructor(private readonly provider: AddressProvider) {}
 
-  public async validate(
+  private mapToResponse(
     input: ValidateAddressRequestBody,
-  ): Promise<ValidateAddressResponse> {
-    const providerResult = await this.provider.validate(input.address);
+    providerResult: ProviderValidationResult,
+  ): ValidateAddressResponse {
     const classification = classifyAddressResult({
       rawAddress: input.address,
       normalized: providerResult.normalized,
@@ -33,6 +34,13 @@ class DefaultAddressValidationService implements AddressValidationService {
       reason: classification.reason,
       source: providerResult.source,
     };
+  }
+
+  public async validate(
+    input: ValidateAddressRequestBody,
+  ): Promise<ValidateAddressResponse> {
+    const providerResult = await this.provider.validate(input.address);
+    return this.mapToResponse(input, providerResult);
   }
 }
 
