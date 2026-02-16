@@ -49,12 +49,12 @@ const buildUnverifiableResult = (reason: string): AddressClassificationOutput =>
 export const classifyAddressResult = (
   input: AddressClassificationInput,
 ): AddressClassificationOutput => {
-  if (!input.normalized) {
-    return buildUnverifiableResult(UNVERIFIABLE_REASONS.MISSING_NORMALIZED_ADDRESS);
-  }
-
   if (typeof input.unverifiableReason === "string" && input.unverifiableReason.trim().length > 0) {
     return buildUnverifiableResult(input.unverifiableReason.trim());
+  }
+
+  if (!input.normalized) {
+    return buildUnverifiableResult(UNVERIFIABLE_REASONS.MISSING_NORMALIZED_ADDRESS);
   }
 
   const corrections = sanitizeCorrections(input.corrections);
