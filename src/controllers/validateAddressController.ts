@@ -6,10 +6,15 @@ export const validateAddressControllerPlaceholder = (
   res: Response,
 ): void => {
   const requestIdHeader = req.headers["x-request-id"];
-  const requestId =
-    typeof requestIdHeader === "string" && requestIdHeader.length > 0
-      ? requestIdHeader
+  const requestIdFromLocals =
+    typeof res.locals.requestId === "string" && res.locals.requestId.length > 0
+      ? res.locals.requestId
       : null;
+  const requestId =
+    requestIdFromLocals ??
+    (typeof requestIdHeader === "string" && requestIdHeader.length > 0
+      ? requestIdHeader
+      : null);
 
   res
     .status(501)
