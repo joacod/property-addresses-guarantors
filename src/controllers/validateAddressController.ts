@@ -1,29 +1,18 @@
-import type { Request, Response } from "express";
-import { buildErrorResponse } from "../utils/httpError.js";
+import type { NextFunction, Request, Response } from "express";
+import type { ValidateAddressRequestBody } from "../domain/addressContract.js";
+import { addressValidationService } from "../services/addressValidationService.js";
 
-export const validateAddressControllerPlaceholder = (
+export const validateAddressController = async (
   req: Request,
   res: Response,
-): void => {
-  const requestIdHeader = req.headers["x-request-id"];
-  const requestIdFromLocals =
-    typeof res.locals.requestId === "string" && res.locals.requestId.length > 0
-      ? res.locals.requestId
-      : null;
-  const requestId =
-    requestIdFromLocals ??
-    (typeof requestIdHeader === "string" && requestIdHeader.length > 0
-      ? requestIdHeader
-      : null);
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const body = req.body as ValidateAddressRequestBody;
+    const validationResult = await addressValidationService.validate(body);
 
-  res
-    .status(501)
-    .json(
-      buildErrorResponse(
-        "NOT_IMPLEMENTED",
-        "validate-address is defined but not implemented yet",
-        null,
-        requestId,
-      ),
-    );
+    res.status(200).json(validationResult);
+  } catch (error) {
+    next(error);
+  }
 };
