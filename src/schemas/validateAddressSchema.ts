@@ -1,7 +1,14 @@
-import type { ValidateAddressRequestBody } from "../domain/addressContract.js";
+import { z } from "zod";
 
-export const validateAddressRequestSchemaPlaceholder = {
-  address: "string (non-empty)",
-} as const;
+export const validateAddressRequestSchema = z.object({
+  address: z
+    .string({
+      error: "address must be a string",
+    })
+    .trim()
+    .min(1, "address must not be empty"),
+});
 
-export type ValidateAddressRequestShape = ValidateAddressRequestBody;
+export type ValidateAddressRequestShape = z.infer<
+  typeof validateAddressRequestSchema
+>;
