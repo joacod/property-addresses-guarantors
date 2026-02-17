@@ -1,5 +1,7 @@
 import cors from "cors";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { openApiSpec } from "./docs/openApiSpec.js";
 import { errorHandlerMiddleware } from "./middleware/errorHandlerMiddleware.js";
 import { requestIdMiddleware } from "./middleware/requestIdMiddleware.js";
 import validateAddressRouter from "./routes/validateAddressRoute.js";
@@ -41,6 +43,12 @@ app.use(validateAddressRouter);
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
+
+app.get("/openapi.json", (_req, res) => {
+  res.status(200).json(openApiSpec);
+});
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.use(errorHandlerMiddleware);
 
