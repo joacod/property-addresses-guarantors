@@ -1,4 +1,4 @@
-# property-addresses-guarantors
+# Property Addresses - Guarantors
 
 Take-home implementation of a US-focused address validation endpoint using Express + TypeScript.
 
@@ -17,6 +17,7 @@ Build `POST /validate-address` that accepts a free-form address and returns:
 - `zod` for request schema validation
 - `dotenv` + env parsing for runtime config
 - `cors` allowlist baseline
+- `swagger-ui-express` for OpenAPI docs
 - `vitest` + `supertest` for unit and integration tests
 - `eslint` for baseline code quality gate
 
@@ -40,10 +41,46 @@ cp .env.example .env
 npm run dev
 ```
 
-Health check:
+4. Swagger, open:
 
 ```bash
-curl -s http://localhost:3000/health
+http://localhost:3000/docs
+```
+
+## Swagger test payloads
+
+Use these JSON bodies in `/docs` for `POST /validate-address`.
+
+Valid result:
+
+```json
+{
+  "address": "123 Main St, Springfield, IL 62704"
+}
+```
+
+Corrected result:
+
+```json
+{
+  "address": "123 main street, springfield, illinois 62704"
+}
+```
+
+Unverifiable result (non-US):
+
+```json
+{
+  "address": "10 Downing St, London, UK SW1A 2AA"
+}
+```
+
+Malformed payload (400):
+
+```json
+{
+  "address": "   "
+}
 ```
 
 ## Quality Commands
@@ -131,46 +168,6 @@ Field semantics:
 ```
 
 All errors follow this shape. `request_id` is included in error payloads and echoed/generated as `x-request-id` response header for traceability.
-
-## Example calls
-
-Start the server:
-
-```bash
-npm run dev
-```
-
-Valid input:
-
-```bash
-curl -s -X POST http://localhost:3000/validate-address \
-  -H "Content-Type: application/json" \
-  -d '{"address":"123 Main St, Springfield, IL 62704"}'
-```
-
-Corrected input:
-
-```bash
-curl -s -X POST http://localhost:3000/validate-address \
-  -H "Content-Type: application/json" \
-  -d '{"address":"123 main street, springfield, illinois 62704"}'
-```
-
-Unverifiable non-US input:
-
-```bash
-curl -s -X POST http://localhost:3000/validate-address \
-  -H "Content-Type: application/json" \
-  -d '{"address":"10 Downing St, London, UK SW1A 2AA"}'
-```
-
-Malformed payload:
-
-```bash
-curl -s -X POST http://localhost:3000/validate-address \
-  -H "Content-Type: application/json" \
-  -d '{"address":"   "}'
-```
 
 ## Project structure
 
