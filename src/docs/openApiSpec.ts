@@ -1,3 +1,7 @@
+import { UNVERIFIABLE_REASONS } from "../domain/addressContract.js";
+
+const unverifiableReasonEnum = Object.values(UNVERIFIABLE_REASONS);
+
 export const openApiSpec = {
   openapi: "3.0.3",
   info: {
@@ -156,12 +160,7 @@ export const openApiSpec = {
           reason: {
             type: "string",
             nullable: true,
-            enum: [
-              "missing_normalized_address",
-              "insufficient_input",
-              "non_us_address",
-              "unparseable_address",
-            ],
+            enum: unverifiableReasonEnum,
           },
           source: {
             type: "string",
