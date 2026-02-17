@@ -5,109 +5,18 @@ import {
 } from "../domain/addressContract.js";
 import { normalizeAddressText } from "../domain/addressNormalization.js";
 import type { AddressProvider, ProviderValidationResult } from "./addressProvider.js";
+import {
+  DIRECTIONAL_ALIASES,
+  LOCAL_PROVIDER_CORRECTIONS,
+  NON_US_COUNTRY_REGEX,
+  STATE_CODES,
+  STATE_NAMES_TO_CODE,
+  STREET_NUMBER_REGEX,
+  STREET_SUFFIX_ALIASES,
+  STREET_SUFFIX_WORDS,
+  ZIP_CODE_REGEX,
+} from "./localHeuristic.constants.js";
 import { LOCAL_PROVIDER_SOURCE } from "../utils/providerConstants.js";
-
-const ZIP_CODE_REGEX = /^\d{5}(?:-\d{4})?$/;
-const STREET_NUMBER_REGEX = /^\d+[a-zA-Z0-9-]*$/;
-const NON_US_COUNTRY_REGEX = /\b(canada|mexico|uk|united kingdom|france|germany|spain)\b/i;
-
-const STREET_SUFFIX_ALIASES: Record<string, string> = {
-  avenue: "Ave",
-  ave: "Ave",
-  boulevard: "Blvd",
-  blvd: "Blvd",
-  circle: "Cir",
-  cir: "Cir",
-  court: "Ct",
-  ct: "Ct",
-  drive: "Dr",
-  dr: "Dr",
-  lane: "Ln",
-  ln: "Ln",
-  parkway: "Pkwy",
-  pkwy: "Pkwy",
-  place: "Pl",
-  pl: "Pl",
-  road: "Rd",
-  rd: "Rd",
-  square: "Sq",
-  sq: "Sq",
-  street: "St",
-  st: "St",
-  terrace: "Ter",
-  ter: "Ter",
-  trail: "Trl",
-  trl: "Trl",
-  way: "Way",
-};
-
-const DIRECTIONAL_ALIASES: Record<string, string> = {
-  n: "N",
-  s: "S",
-  e: "E",
-  w: "W",
-  ne: "NE",
-  nw: "NW",
-  se: "SE",
-  sw: "SW",
-};
-
-const STATE_NAMES_TO_CODE: Record<string, string> = {
-  ALABAMA: "AL",
-  ALASKA: "AK",
-  ARIZONA: "AZ",
-  ARKANSAS: "AR",
-  CALIFORNIA: "CA",
-  COLORADO: "CO",
-  CONNECTICUT: "CT",
-  DELAWARE: "DE",
-  FLORIDA: "FL",
-  GEORGIA: "GA",
-  HAWAII: "HI",
-  IDAHO: "ID",
-  ILLINOIS: "IL",
-  INDIANA: "IN",
-  IOWA: "IA",
-  KANSAS: "KS",
-  KENTUCKY: "KY",
-  LOUISIANA: "LA",
-  MAINE: "ME",
-  MARYLAND: "MD",
-  MASSACHUSETTS: "MA",
-  MICHIGAN: "MI",
-  MINNESOTA: "MN",
-  MISSISSIPPI: "MS",
-  MISSOURI: "MO",
-  MONTANA: "MT",
-  NEBRASKA: "NE",
-  NEVADA: "NV",
-  "NEW HAMPSHIRE": "NH",
-  "NEW JERSEY": "NJ",
-  "NEW MEXICO": "NM",
-  "NEW YORK": "NY",
-  "NORTH CAROLINA": "NC",
-  "NORTH DAKOTA": "ND",
-  OHIO: "OH",
-  OKLAHOMA: "OK",
-  OREGON: "OR",
-  PENNSYLVANIA: "PA",
-  "RHODE ISLAND": "RI",
-  "SOUTH CAROLINA": "SC",
-  "SOUTH DAKOTA": "SD",
-  TENNESSEE: "TN",
-  TEXAS: "TX",
-  UTAH: "UT",
-  VERMONT: "VT",
-  VIRGINIA: "VA",
-  WASHINGTON: "WA",
-  "WEST VIRGINIA": "WV",
-  WISCONSIN: "WI",
-  WYOMING: "WY",
-  "DISTRICT OF COLUMBIA": "DC",
-};
-
-const STATE_CODES = new Set(Object.values(STATE_NAMES_TO_CODE));
-const STREET_SUFFIX_WORDS = new Set(Object.keys(STREET_SUFFIX_ALIASES));
 
 interface ResolvedState {
   code: string;
@@ -397,11 +306,11 @@ const buildCorrections = (parts: ParsedAddressParts): string[] => {
   const corrections: string[] = [];
 
   if (parts.state.fromFullName) {
-    corrections.push("normalized state to USPS code");
+    corrections.push(LOCAL_PROVIDER_CORRECTIONS.NORMALIZED_STATE_TO_USPS_CODE);
   }
 
   if (parts.usedSuffixExpansion) {
-    corrections.push("normalized street suffix");
+    corrections.push(LOCAL_PROVIDER_CORRECTIONS.NORMALIZED_STREET_SUFFIX);
   }
 
   return corrections;
