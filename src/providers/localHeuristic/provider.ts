@@ -1,18 +1,18 @@
 import {
   UNVERIFIABLE_REASONS,
   type UnverifiableReason,
-} from "../domain/addressContract.js";
-import { normalizeAddressText } from "../domain/addressNormalization.js";
-import type { AddressProvider, ProviderValidationResult } from "./addressProvider.js";
+} from "../../domain/addressContract.js";
+import { normalizeAddressText } from "../../domain/addressNormalization.js";
+import type { AddressProvider, ProviderValidationResult } from "../addressProvider.js";
 import {
   NON_US_COUNTRY_REGEX,
-} from "./localHeuristic.constants.js";
+} from "./constants.js";
 import {
   buildCorrections,
   buildNormalizedAddress,
   parseAddressParts,
-} from "./localHeuristicParser.js";
-import { LOCAL_PROVIDER_SOURCE } from "../utils/providerConstants.js";
+} from "./parser.js";
+import { LOCAL_PROVIDER_SOURCE } from "../../utils/providerConstants.js";
 
 const buildUnverifiableResult = (
   reason: UnverifiableReason,

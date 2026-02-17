@@ -4,7 +4,7 @@ import type {
 } from "../domain/addressContract.js";
 import { classifyAddressResult } from "../domain/addressClassifier.js";
 import type { ProviderValidationResult } from "../providers/addressProvider.js";
-import { LocalHeuristicProvider } from "../providers/localHeuristicProvider.js";
+import { LocalHeuristicProvider } from "../providers/localHeuristic/provider.js";
 import type { AddressProvider } from "../providers/addressProvider.js";
 
 export interface AddressValidationService {

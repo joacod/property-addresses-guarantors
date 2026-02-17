@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseAddressParts } from "../../src/providers/localHeuristicParser.js";
+import { parseAddressParts } from "../../src/providers/localHeuristic/parser.js";
 
 describe("parseAddressParts", () => {
   it("parses comma-separated addresses with directional and full state name", () => {

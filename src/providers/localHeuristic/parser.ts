@@ -1,4 +1,4 @@
-import type { NormalizedAddress } from "../domain/addressContract.js";
+import type { NormalizedAddress } from "../../domain/addressContract.js";
 import {
   DIRECTIONAL_ALIASES,
   LOCAL_PROVIDER_CORRECTIONS,
@@ -8,7 +8,7 @@ import {
   STREET_SUFFIX_ALIASES,
   STREET_SUFFIX_WORDS,
   ZIP_CODE_REGEX,
-} from "./localHeuristic.constants.js";
+} from "./constants.js";
 
 interface ResolvedState {
   code: string;
